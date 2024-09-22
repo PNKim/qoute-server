@@ -11,8 +11,8 @@ export class AuthenticationService {
         'users_qoute',
         username,
         password,
-      ); // Fetch data from the 'users' table
-      return users; // Return the data fetched
+      );
+      return users;
     } catch (error) {
       throw new Error('Error fetching users: ' + error.message); // Handle any errors
     }
@@ -21,7 +21,7 @@ export class AuthenticationService {
   async login(username: string) {
     try {
       const users = await this.supabaseService.login('users_qoute', username); // Fetch data from the 'users' table
-      return users; // Return the data fetched
+      return users;
     } catch (error) {
       throw new Error('Error fetching users: ' + error.message); // Handle any errors
     }

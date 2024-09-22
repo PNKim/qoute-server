@@ -13,8 +13,12 @@ export class SupabaseService {
   }
 
   // Method to interact with Supabase, e.g., fetching data
-  async getData(tableName: string) {
-    const { data, error } = await this.supabase.from(tableName).select('*');
+  async getQoute(tableName: string, qoute: string) {
+    const { data, error } = await this.supabase
+      .from(tableName)
+      .select('*')
+      .order('id', { ascending: false })
+      .ilike('qoute', `%${qoute}%`);
 
     if (error) {
       throw new Error(error.message);
@@ -47,5 +51,62 @@ export class SupabaseService {
 
     return data[0];
   }
-  // Other Supabase methods can be added here
+
+  async newQoute(tableName: string, userId: number, qoute: string) {
+    const { data, error } = await this.supabase
+      .from(tableName)
+      .insert([{ userId: userId, qoute: qoute, vote: 0 }])
+      .select();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  }
+
+  async updateQoute(
+    tableName: string,
+    id: number,
+    userId: number,
+    qoute: string,
+  ) {
+    const { data, error } = await this.supabase
+      .from(tableName)
+      .update({ qoute: qoute })
+      .eq('id', id)
+      .eq('userId', userId)
+      .select();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  }
+
+  async updateQouteVote(tableName: string, id: number, vote: number) {
+    const { data, error } = await this.supabase
+      .from(tableName)
+      .update({ vote: vote })
+      .eq('id', id)
+      .select();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  }
+
+  async updateUserVote(tableName: string, id: number, userId: number) {
+    const { data, error } = await this.supabase
+      .from(tableName)
+      .update({ qoute_vote: id })
+      .eq('id', userId)
+      .select();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data;
+  }
 }

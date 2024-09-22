@@ -1,40 +1,36 @@
-// jwt-auth.guard.ts
 import {
-  Injectable,
   CanActivate,
   ExecutionContext,
+  Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import * as jwt from 'jsonwebtoken';
 
 @Injectable()
-export class JwtAuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-
     if (!token) {
-      throw new UnauthorizedException('Token has invalid format');
+      throw new UnauthorizedException();
     }
-
     try {
-      // Verify the token and attach the payload to the request object
-      const payload = jwt.verify(token, process.env.SECRET_KEY);
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: 'secret',
+      });
       request['user'] = payload;
-    } catch (err) {
-      throw new UnauthorizedException('Token is invalid');
+    } catch (e) {
+      throw new UnauthorizedException();
     }
-
-    return true; // Allow request to proceed
+    return true;
   }
 
-  private extractTokenFromHeader(request: Request): string | null {
-    const authHeader = request.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return null;
-    }
-    // Extract token after 'Bearer '
-    return authHeader.split(' ')[1];
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, types, token] =
+      request.headers.authorization?.split(' ') ?? [];
+    return type || types === 'Bearer' ? token : undefined;
   }
 }
