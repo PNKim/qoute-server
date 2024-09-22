@@ -23,5 +23,29 @@ export class SupabaseService {
     return data;
   }
 
+  async register(tableName: string, username: string, password: string) {
+    const { data, error } = await this.supabase
+      .from(tableName)
+      .insert([{ username: username, password: password }])
+      .select();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  }
+
+  async login(tableName: string, username: string) {
+    const { data, error } = await this.supabase
+      .from(tableName)
+      .select('*')
+      .eq('username', username);
+
+    if (error || !data[0]) {
+      throw new Error(error.message);
+    }
+
+    return data[0];
+  }
   // Other Supabase methods can be added here
 }
