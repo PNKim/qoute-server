@@ -5,7 +5,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: 'https://qoute-sigma.vercel.app',
+    origin: 'https://qoute-sigma.vercel.app/',
     credentials: true,
   });
 
