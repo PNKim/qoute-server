@@ -1,11 +1,22 @@
-import { Body, Controller, Get, Post, Put, Query, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { QouteService } from './qoute.service';
+import { AuthGuard } from 'src/middleware/jwt-auth-guard';
 
 @Controller('qoute')
 export class QouteController {
   constructor(private readonly qouteService: QouteService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   async getQoute(@Query() query: any, @Res() res: Response) {
     const { qoute } = query;
@@ -17,6 +28,7 @@ export class QouteController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post()
   async newQoute(@Body() body: any, @Res() res: Response) {
     const { userId, qoute } = body;
@@ -28,6 +40,7 @@ export class QouteController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Put()
   async updateQoute(@Body() body: any, @Res() res: Response) {
     const { id, userId, qoute } = body;
@@ -39,6 +52,7 @@ export class QouteController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Put('vote')
   async updateQouteVote(@Body() body: any, @Res() res: Response) {
     const { id, vote } = body;
@@ -50,6 +64,7 @@ export class QouteController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Put('uservote')
   async updateUserVote(@Body() body: any, @Res() res: Response) {
     const { userId, id } = body;

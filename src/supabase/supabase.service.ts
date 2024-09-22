@@ -96,7 +96,7 @@ export class SupabaseService {
     return data;
   }
 
-  async updateUserVote(tableName: string, id: number, userId: number) {
+  async updateUserVote(tableName: string, id: number | null, userId: number) {
     const { data, error } = await this.supabase
       .from(tableName)
       .update({ qoute_vote: id })

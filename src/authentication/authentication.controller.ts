@@ -48,9 +48,11 @@ export class AuthenticationController {
           .json({ message: 'Invalid username or password' });
       }
 
-      const jwt = await this.jwtService.signAsync({ userId: user.id });
+      const jwt = await this.jwtService.signAsync({
+        userId: user.id,
+      });
 
-      return res.status(200).json({ token: jwt });
+      return res.status(200).json({ token: jwt, qoute_vote: user.qoute_vote });
     } catch {
       return res.status(401).json({ message: 'Invalid username or password' });
     }

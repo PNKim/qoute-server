@@ -34,7 +34,7 @@ export class QouteService {
     return qoutes;
   }
 
-  async updateUserVote(userId: number, id: number) {
+  async updateUserVote(userId: number, id: number | null) {
     const qoutes = await this.supabaseService.updateUserVote(
       'users_qoute',
       id,
