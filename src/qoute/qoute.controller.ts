@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QouteService } from './qoute.service';
-import { AuthGuard } from 'src/middleware/jwt-auth-guard';
+import { AuthGuard } from '../middleware/jwt-auth-guard';
 
 @Controller('qoute')
 export class QouteController {
